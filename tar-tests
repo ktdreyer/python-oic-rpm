@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Upstream does not ship tests to PyPI, so this script downloads from GitHub.
+
+shopt -s extglob
+set -exu
+set -o pipefail
+
+VERSION=1.3.0
+
+if [ ! -f $VERSION.tar.gz ]; then
+  curl -L -O \
+    https://github.com/OpenIDC/pyoidc/archive/refs/tags/$VERSION.tar.gz
+fi
+
+rm -rf pyoidc-$VERSION
+
+tar xzf $VERSION.tar.gz pyoidc-$VERSION/tests
+mv pyoidc-$VERSION oic-$VERSION
+
+tar czf oic-$VERSION-tests.tar.gz oic-$VERSION
+
+rm $VERSION.tar.gz
+rm -r oic-$VERSION
